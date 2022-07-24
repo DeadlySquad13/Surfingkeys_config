@@ -660,8 +660,8 @@ Building `surfingkeys-conf` requires a few dependencies to be installed:
  
 3. __Install gulp-notify dependencies__ (steps required on WSL)
 	```shell
-  $ sudo apt-get update
-  $ sudo apt-get install libnotify-bin
+	$ sudo apt-get update
+	$ sudo apt-get install libnotify-bin
 	```
 
 4. __*(Optional)* Private API Key Configuration__
