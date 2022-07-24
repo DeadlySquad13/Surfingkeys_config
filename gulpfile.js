@@ -24,7 +24,7 @@ const { COPYFILE_EXCL } = require("fs").constants
 const { URL } = require("url")
 
 const pkg = require("./package.json")
-const webpackConfig = require("./webpack.config.js")
+const webpackConfig = require("./webpack.config")
 
 const copyrightYearOne = 2017
 

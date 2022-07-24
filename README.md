@@ -6,6 +6,34 @@ The source file is README.tmpl.md
 
 -->
 
+# Table of Contents
+
+- [Table of Contents](#table-of-contents)
+- [Maddy's SurfingKeys Configuration](#maddys-surfingkeys-configuration)
+  - [Table of Contents](#table-of-contents)
+  - [Features](#features)
+    - [Site-Specific Key Mappings](#site-specific-key-mappings)
+    - [Search Suggestion Engines](#search-suggestion-engines)
+  - [Installation](#installation)
+    - [Dependencies](#dependencies)
+    - [Building & Installing](#building--installing)
+  - [Screenshots](#screenshots)
+        - [crunchbase-people](#crunchbase-people)
+        - [define](#define)
+        - [dockerhub](#dockerhub)
+        - [domainr](#domainr)
+        - [github](#github)
+        - [hackernews](#hackernews)
+        - [hoogle](#hoogle)
+        - [mdn](#mdn)
+        - [npm](#npm)
+        - [thesaurus](#thesaurus)
+        - [wolframalpha](#wolframalpha)
+        - [wolframalpha 2](#wolframalpha-2)
+        - [youtube](#youtube)
+  - [Todo](#todo)
+  - [Copyright](#copyright)
+
 Maddy's SurfingKeys Configuration
 =================================
 
@@ -625,17 +653,18 @@ Building `surfingkeys-conf` requires a few dependencies to be installed:
 ### Building & Installing
 
 1. __Clone this repository__
-	```shell
-	$ git clone http://github.com/b0o/surfingkeys-conf
-	$ cd surfingkeys-conf
-	```
-
 2. __Install the NodeJS build dependencies__
 	```shell
 	$ npm install
 	```
+ 
+3. __Install gulp-notify dependencies__ (steps required on WSL)
+	```shell
+  $ sudo apt-get update
+  $ sudo apt-get install libnotify-bin
+	```
 
-3. __*(Optional)* Private API Key Configuration__
+4. __*(Optional)* Private API Key Configuration__
 
 	Some search suggestion engines require private API keys for access. These
 	keys are defined in `conf.priv.js`, which is not itself included in this repository.
@@ -654,15 +683,20 @@ Building `surfingkeys-conf` requires a few dependencies to be installed:
 	$ vim ./conf.priv.js
 	```
 
-4. __Gulp Build/Install__
+5. __Gulp Build/Install__
 	```shell
 	$ gulp install # OR "gulp build" to build to ./build/surfingkeys.js without installing
 	```
 
+  Alternatively, you can use temporary gulp if you don't want to / can't install gulp:
+  '''shell
+  $ npx gulp install
+  '''
+
 	This will build the final configuration file and place it at `~/.config/surfingkeys.js`.
 	If you already have a file in that location, make sure you back it up first!
 
-5. __Load your configuration into the SurfingKeys Extension__
+6. __Load your configuration into the SurfingKeys Extension__
 
 	<details>
 	<summary><strong>Option A</strong> <em>(recommended)</em>: Configure SurfingKeys to automatically load the configuration file</summary>
