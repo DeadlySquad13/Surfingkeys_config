@@ -686,7 +686,17 @@ Requires **`Surfingkeys v1.0.0 or newer`**.
 
 _Coming soon!_
 
-### Build and Install
+1. __Clone this repository__
+2. __Install the NodeJS build dependencies__
+	```shell
+	$ npm install
+	```
+ 
+3. __Install gulp-notify dependencies__ (steps required on WSL)
+	```shell
+	$ sudo apt-get update
+	$ sudo apt-get install libnotify-bin
+	```
 
 #### Dependencies
 
