@@ -657,12 +657,6 @@ Building `surfingkeys-conf` requires a few dependencies to be installed:
 	```shell
 	$ npm install
 	```
-
-	You might get an error on Windows: `UnicodeDecodeError: 'ascii' codec can't decode byte 0xc4 in position 2691: ordinal not in range(128)`
-	Follow these [instructions](https://gist.github.com/bingo347/e6c8e1fe605ecb26d05d54ce1b856740) to fix:
-	```shell
-	$ npm config set --global devdir E:\Configs\node-gyp # Any path but should be non-latin.
-	```
  
 3. __Install gulp-notify dependencies__ (steps required on WSL)
 	```shell
