@@ -39,9 +39,9 @@ const paths = {
   faviconsManifest: "favicons.json",
   readmeOut:        "README.md",
   scriptOut:        "surfingkeys.js",
-  buildDir:         "Surfingkeys/",
+  buildDir:         "/",
   // installDir:       platforms.getConfigHome(),
-  installDir:       "E:/Configs/",
+  installDir:       "E:/Configs/Surfingkeys",
 }
 
 let srcFilesLoaded = false

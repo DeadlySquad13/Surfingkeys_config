@@ -11,7 +11,7 @@ const c = spawn("claudia", [`--set-env=${keysEnvStr}`, "update"], {
   cwd: path.resolve(__dirname, ".."),
 })
 
-c.stdout.on("data", data => process.stdout.write(data))
-c.stderr.on("data", data => process.stderr.write(data))
+c.stdout.on("data", (data) => process.stdout.write(data))
+c.stderr.on("data", (data) => process.stderr.write(data))
 
-c.on("close", code => process.exit(code))
+c.on("close", (code) => process.exit(code))
