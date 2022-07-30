@@ -13,6 +13,7 @@ const unmaps = {
     "Q", "q", "ag",
     "af", ";s", "yp",
     "<Ctrl-j>", "<Ctrl-h>",
+    "H", "L",
   ],
   searchAliases: {
     s: ["g", "d", "b",
@@ -22,6 +23,19 @@ const unmaps = {
 
 const maps = {}
 
+/**
+ * @typedef {Mapping}
+ * @type {object}
+ * @property {?string} alias - The alias  of the mapping (alternate mapping).
+ * @property {?string} map - The mapping.
+ * @property {category} category - The category of the mapping.
+ * @property {MappingCallback} callback - The callback of the mapping.
+ * @description {string} description - The description of the mapping.
+ */
+
+/**
+ * @type {Mapping[]} maps.global
+ */
 maps.global = [
   {
     alias:       "F",
