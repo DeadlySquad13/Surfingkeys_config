@@ -13,7 +13,7 @@ const unmaps = {
     "Q", "q", "ag",
     "af", ";s", "yp",
     "<Ctrl-j>", "<Ctrl-h>",
-    "H", "L",
+    "H", "L", "J",
   ],
   searchAliases: {
     s: ["g", "d", "b",
@@ -60,18 +60,6 @@ maps.global = [
     map:         "j",
     category:    categories.scroll,
     description: "Scroll down",
-  },
-  {
-    alias:       "K",
-    map:         "e",
-    category:    categories.scroll,
-    description: "Scroll half page up",
-  },
-  {
-    alias:       "J",
-    map:         "d",
-    category:    categories.scroll,
-    description: "Scroll half page down",
   },
   {
     alias:       "gh",
@@ -210,6 +198,47 @@ maps.global = [
     category:    categories.clipboard,
     description: "Open clipboard string as GitHub path (e.g. 'torvalds/linux')",
     callback:    actions.gh.openRepoFromClipboard,
+  },
+
+  {
+    alias:       "X",
+    map:         "x",
+    category:    categories.tabs,
+    description: "Close tab",
+  },
+  {
+    alias:       "x",
+    map:         "ox",
+    category:    categories.tabs,
+    description: "Reopen last closed tab",
+  },
+
+  // * Tab navigation.
+  {
+    alias:       "K",
+    map:         "R",
+    category:    categories.tabs,
+    description: "Go one tab right",
+  },
+  {
+    alias:       "J",
+    map:         "E",
+    category:    categories.tabs,
+    description: "Go one tab left",
+  },
+
+  // * History navigation.
+  {
+    alias:       "H",
+    map:         "S",
+    category:    categories.pageNav,
+    description: "Go back in history",
+  },
+  {
+    alias:       "L",
+    map:         "D",
+    category:    categories.pageNav,
+    description: "Go forward in history",
   },
 ]
 
