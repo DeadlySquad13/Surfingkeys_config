@@ -14,7 +14,7 @@ module.exports = {
     mapkey:             false,
     settings:           false,
     removeSearchAliasX: false,
-    addSearchAliasX:    false,
+    addSearchAlias:     false,
     completions:        false,
   },
   env: {
@@ -30,7 +30,8 @@ module.exports = {
     "newline-per-chained-call": "off",
     "no-restricted-syntax":     "off",
     "implicit-arrow-linebreak": "off",
-    "import/extensions": [ "error", "ignorePackages", { js: "never" }, ],
+    "import/extensions":        ["error", "ignorePackages", { js: "never" }],
+    "no-console":               "off",
 
     "key-spacing": [
       "warn",
