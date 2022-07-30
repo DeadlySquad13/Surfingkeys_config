@@ -160,12 +160,13 @@ util.processCompletions = (completions, searchleader) =>
   Object.values(completions).forEach((s) => {
     if (
       typeof Front === "undefined"
-      || typeof addSearchAliasX === "undefined"
+      || typeof addSearchAlias === "undefined"
       || typeof mapkey === "undefined"
     ) {
+      console.error("Cannot process completions as handlers are undefined!")
       return
     }
-    addSearchAliasX(
+    addSearchAlias(
       s.alias,
       s.name,
       s.search,
