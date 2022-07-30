@@ -2,7 +2,7 @@ const util = require("./util")
 const keys = require("./keys")
 const completions = require("./completions")
 
-// ---- Settings ----//
+// ---- Settings ---- //
 util.addSettings({
   hintAlign:                "left",
   omnibarSuggestionTimeout: 500,

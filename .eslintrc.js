@@ -30,6 +30,7 @@ module.exports = {
     "newline-per-chained-call": "off",
     "no-restricted-syntax":     "off",
     "implicit-arrow-linebreak": "off",
+    "import/extensions": [ "error", "ignorePackages", { js: "never" }, ],
 
     "key-spacing": [
       "warn",
