@@ -7,6 +7,7 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "gulp": "npm exec gulp --",
+    "build": "gulp build",
     "lint": "eslint src gulpfile.js webpack.config.js"
   },
   "repository": {
