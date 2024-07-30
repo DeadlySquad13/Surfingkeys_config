@@ -55,7 +55,18 @@ const maps = {}
 const K = {
   insert: ["i", "I"],
   search: ["s", "S"],
-  yank: ["f", "F"],
+  yank: ["y", "Y"], // Hard to remap to "f": need to remap all default keymappings.
+
+  next: ["r"],
+  prev: ["R"],
+
+  left: ["E"],
+  right: ["N"],
+  down: ["d"],
+  up: ["u"],
+
+  downFast: ["n"],
+  upFast: ["e"],
 }
 
 /**
@@ -77,28 +88,28 @@ const K = {
  */
 maps.global = [
   // Tabs.
-  {
-    alias: "N",
-    map: "R",
-    category: categories.tabs,
-    description: "Go to tab on right",
-  },
   /* { default is ok.
-    alias: "E",
+    alias: K.left[0],
     map: "E",
     category: categories.tabs,
     description: "Go to tab on left",
   }, */
+  {
+    alias: K.right[0],
+    map: "R",
+    category: categories.tabs,
+    description: "Go to tab on right",
+  },
   // Search.
   // - <Tab> is occupied by browser so using the nearest key.
   {
-    alias: "r",
+    alias: K.next[0],
     map: "n",
     category: categories.scroll,
     description: "Scroll to next search result",
   },
   {
-    alias: "R",
+    alias: K.prev[0],
     map: "N",
     category: categories.scroll,
     description: "Scroll to previous search result",
@@ -123,26 +134,26 @@ maps.global = [
   },
   // Scrolling.
   {
-    alias: "n",
+    alias: K.downFast[0],
     map: "d",
     category: categories.scroll,
     description: "Scroll half page down",
   },
   {
-    alias: "u",
+    alias: K.up[0],
     map: "k",
     category: categories.scroll,
     description: "Scroll up",
   },
   {
-    alias: "d",
+    alias: K.down[0],
     map: "j",
     category: categories.scroll,
     description: "Scroll down",
   },
   // Default was ok.
   /* {
-    alias: "",
+    alias: K.upFast[0],
     map: "e",
     category: categories.scroll,
     description: "Scroll half page up",
@@ -178,6 +189,13 @@ maps.global = [
       actions.openLink(`${window.location.protocol}//${parentDomain}`)
     },
   },
+  // Yank.
+  /* { Didn't help with remapping "y" to "f".
+    alias: K.yank[0],
+    map: "y",
+    category: categories.clipboard,
+    description: "Copy",
+  }, */
   {
     alias: `${K.yank[0]}p`,
     category: categories.clipboard,
