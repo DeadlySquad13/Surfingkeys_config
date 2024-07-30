@@ -8,9 +8,11 @@ const { categories } = help
 
 const { Clipboard, Front, Hints } = api
 
-// Remove undesired default mappings
+// Remove undesired default mappings. You don't need
+// to include remapped keybinding here (they won't work).
 const unmaps = {
   mappings: [
+    "r",
     "sb",
     "sw",
     "ob",
@@ -48,43 +50,104 @@ const unmaps = {
 
 const maps = {}
 
+// Some "leader" keymappings. Trying to be ergonomic and stay as close
+// to my NeoVim setup as possible.
+const K = {
+  insert: ["i", "I"],
+  search: ["s", "S"],
+  yank: ["f", "F"],
+}
+
+/**
+ * @typedef {Mapping}
+ * @type {object}
+ * @property {?string} map - Left side of the mapping. Use it if you want to
+ *   map default to something else (see `alias`).
+ * @property {string} alias - Right side of the mapping. Should be paired with
+ *   either `map` os `callback`.
+ * @property {category} category - The category of the mapping.
+ * @property {MappingCallback} callback - The callback of the mapping.
+ * @description {string} description - The description of the mapping.
+ */
+
+/**
+ * @type {Mapping[]} maps.global
+ * Order is important like in vim! Next mapping will take previous remaps into
+ * account.
+ */
 maps.global = [
+  // Tabs.
   {
-    alias: "F",
+    alias: "N",
+    map: "R",
+    category: categories.tabs,
+    description: "Go to tab on right",
+  },
+  /* { default is ok.
+    alias: "E",
+    map: "E",
+    category: categories.tabs,
+    description: "Go to tab on left",
+  }, */
+  // Search.
+  // - <Tab> is occupied by browser so using the nearest key.
+  {
+    alias: "r",
+    map: "n",
+    category: categories.scroll,
+    description: "Scroll to next search result",
+  },
+  {
+    alias: "R",
+    map: "N",
+    category: categories.scroll,
+    description: "Scroll to previous search result",
+  },
+  {
+    alias: K.search[0],
+    map: "f",
+    category: categories.mouseClick,
+    description: "Open a link in active tab",
+  },
+  {
+    alias: K.search[1],
     map: "gf",
     category: categories.mouseClick,
     description: "Open a link in non-active new tab",
   },
   {
-    alias: "zf",
+    alias: `z${K.search[0]}`,
     category: categories.mouseClick,
     description: "Open link URL in vim editor",
     callback: actions.previewLink,
   },
+  // Scrolling.
   {
-    alias: "w",
+    alias: "n",
+    map: "d",
+    category: categories.scroll,
+    description: "Scroll half page down",
+  },
+  {
+    alias: "u",
     map: "k",
     category: categories.scroll,
     description: "Scroll up",
   },
   {
-    alias: "s",
+    alias: "d",
     map: "j",
     category: categories.scroll,
     description: "Scroll down",
   },
-  {
-    alias: "K",
+  // Default was ok.
+  /* {
+    alias: "",
     map: "e",
     category: categories.scroll,
     description: "Scroll half page up",
-  },
-  {
-    alias: "J",
-    map: "d",
-    category: categories.scroll,
-    description: "Scroll half page down",
-  },
+  }, */
+
   {
     alias: "gh",
     category: categories.scroll,
@@ -92,16 +155,16 @@ maps.global = [
     callback: actions.scrollToHash,
   },
   {
-    alias: "gi",
+    alias: `g${K.insert[0]}`,
     category: categories.pageNav,
     description: "Edit current URL with vim editor",
     callback: actions.vimEditURL,
   },
   {
-    alias: "gI",
+    alias: `g${K.insert[1]}`,
     category: categories.pageNav,
     description: "View image in new tab",
-    callback: () => util.createHints("img", (i) => actions.openLink(i.src)),
+    callback: () => util.createHints("img", (i) => actions.openLink(i.src, { newTab: true })),
   },
   {
     alias: "g.",
@@ -116,19 +179,19 @@ maps.global = [
     },
   },
   {
-    alias: "yp",
+    alias: `${K.yank[0]}p`,
     category: categories.clipboard,
     description: "Copy URL path of current page",
     callback: () => Clipboard.write(window.location.href),
   },
   {
-    alias: "yI",
+    alias: `${K.yank[0]}I`,
     category: categories.clipboard,
     description: "Copy Image URL",
     callback: () => util.createHints("img", (i) => Clipboard.write(i.src)),
   },
   {
-    alias: "yA",
+    alias: `${K.yank[0]}A`,
     category: categories.clipboard,
     description: "Copy link as Markdown",
     callback: () =>
@@ -137,19 +200,19 @@ maps.global = [
       ),
   },
   {
-    alias: "yO",
+    alias: `${K.yank[0]}O`,
     category: categories.clipboard,
     description: "Copy page URL/Title as Org-mode link",
     callback: () => Clipboard.write(actions.getOrgLink()),
   },
   {
-    alias: "yM",
+    alias: `${K.yank[0]}M`,
     category: categories.clipboard,
     description: "Copy page URL/Title as Markdown link",
     callback: () => Clipboard.write(actions.getMarkdownLink()),
   },
   {
-    alias: "yT",
+    alias: `${K.yank[0]}T`,
     category: categories.tabs,
     description: "Duplicate current tab (non-active new tab)",
     callback: () =>
@@ -269,7 +332,7 @@ maps.global = [
     description: "Open clipboard string as GitHub path (e.g. 'torvalds/linux')",
     callback: async () => {
       const { url } = actions.gh.parseRepo(await navigator.clipboard.readText())
-      Front.showBanner(`Open ${url}`)
+      Front.showBanner(`Open ${url} `)
       actions.openLink(url, { newTab: true })
     },
   },
@@ -470,13 +533,13 @@ maps["youtube.com"] = [
   },
   {
     leader: "",
-    alias: "Yt",
+    alias: `${K.yank[0]}t`,
     description: "Copy YouTube video link for current time",
     callback: () => Clipboard.write(actions.yt.getCurrentTimestampLink()),
   },
   {
     leader: "",
-    alias: "Ym",
+    alias: `${K.yank[0]}m`,
     description: "Copy YouTube video markdown link for current time",
     callback: () =>
       Clipboard.write(actions.yt.getCurrentTimestampMarkdownLink()),
@@ -595,12 +658,12 @@ maps["github.com"] = [
     callback: actions.gh.star({ toggle: true }),
   },
   {
-    alias: "yy",
+    alias: `${K.yank[0]}${K.yank[0]}`,
     description: "Copy Project Path",
     callback: async () => Clipboard.write(util.getURLPath({ count: 2 })),
   },
   {
-    alias: "Y",
+    alias: `${K.yank[1]}`,
     description: "Copy Project Path (including domain)",
     callback: () =>
       Clipboard.write(util.getURLPath({ count: 2, domain: true })),
@@ -634,7 +697,7 @@ maps["github.com"] = [
         .then((file) => actions.openLink(file.rawUrl, { newTab: true })),
   },
   {
-    alias: "yr",
+    alias: `${K.yank[0]}r`,
     description: "Copy raw link to file",
     callback: () =>
       actions.gh
@@ -642,7 +705,7 @@ maps["github.com"] = [
         .then((file) => Clipboard.write(file.rawUrl)),
   },
   {
-    alias: "yf",
+    alias: `${K.yank[0]}f`,
     description: "Copy link to file",
     callback: () =>
       actions.gh.selectFile().then((file) => Clipboard.write(file.url)),
@@ -682,12 +745,12 @@ maps["gitlab.com"] = [
     callback: actions.gl.star,
   },
   {
-    alias: "y",
+    alias: K.yank[0],
     description: "Copy Project Path",
     callback: () => Clipboard.write(util.getURLPath({ count: 2 })),
   },
   {
-    alias: "Y",
+    alias: K.yank[1],
     description: "Copy Project Path (including domain)",
     callback: () =>
       Clipboard.write(util.getURLPath({ count: 2, domain: true })),
@@ -968,7 +1031,7 @@ maps["wikipedia.org"] = [
     callback: () => util.createHints("a[rel=nofollow]"),
   },
   {
-    alias: "ys",
+    alias: `${K.yank[0]}s`,
     description: "Copy article summary as Markdown",
     callback: () => Clipboard.write(actions.wp.markdownSummary()),
   },
@@ -1066,7 +1129,7 @@ maps["rescript-lang.org"] = [
     leader: "",
     alias: "i",
     description: "Focus search field",
-    path: `(${rescriptMeta.docsPat})?$`,
+    path: `(${rescriptMeta.docsPat}) ? $`,
     callback: actions.re.focusSearch,
   },
   {
@@ -1098,7 +1161,7 @@ maps["rescript-lang.org"] = [
     callback: () => actions.openLink("/packages"),
   },
   {
-    alias: "Y",
+    alias: K.yank[1],
     description: "Open playground",
     callback: () => actions.openLink("/try"),
   },
