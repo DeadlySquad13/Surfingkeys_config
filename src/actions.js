@@ -84,10 +84,9 @@ actions.getDnsInfoUrl = ({
   hostname = window.location.hostname,
   all = false,
 } = {}) =>
-  `${ddossierUrl}?dom_dns=true&addr=${hostname}${
-    all
-      ? "?dom_whois=true&dom_dns=true&traceroute=true&net_whois=true&svc_scan=true"
-      : ""
+  `${ddossierUrl}?dom_dns=true&addr=${hostname}${all
+    ? "?dom_whois=true&dom_dns=true&traceroute=true&net_whois=true&svc_scan=true"
+    : ""
   }`
 
 actions.getGoogleCacheUrl = ({ href = window.location.href } = {}) =>
@@ -150,8 +149,8 @@ actions.getSummaryUrl = ({ href = window.location.href } = {}) =>
 // ----------------------------
 actions.openAnchor =
   ({ newTab = false, active = true, prop = "href" } = {}) =>
-  (a) =>
-    actions.openLink(a[prop], { newTab, active })
+    (a) =>
+      actions.openLink(a[prop], { newTab, active })
 
 actions.openLink = (url, { newTab = false, active = true } = {}) => {
   if (newTab) {
@@ -167,7 +166,7 @@ actions.openLink = (url, { newTab = false, active = true } = {}) => {
 actions.editSettings = () =>
   tabOpenLink(chrome.extension.getURL("/pages/options.html"))
 
-actions.togglePdfViewer = () =>
+/* actions.togglePdfViewer = () =>
   chrome.storage.local.get("noPdfViewer", (resp) => {
     if (!resp.noPdfViewer) {
       chrome.storage.local.set({ noPdfViewer: 1 }, () => {
@@ -178,7 +177,7 @@ actions.togglePdfViewer = () =>
         Front.showBanner("PDF viewer enabled.")
       })
     }
-  })
+  }) */
 
 actions.previewLink = () =>
   util.createHints("a[href]", (a) =>
@@ -385,61 +384,61 @@ actions.dg.siteSearch = (site) => {
 actions.gh = {}
 actions.gh.star =
   ({ toggle = false } = {}) =>
-  async () => {
-    const hasDisplayNoneParent = (e) =>
-      window.getComputedStyle(e).display === "none" ||
-      (e.parentElement ? hasDisplayNoneParent(e.parentElement) : false)
+    async () => {
+      const hasDisplayNoneParent = (e) =>
+        window.getComputedStyle(e).display === "none" ||
+        (e.parentElement ? hasDisplayNoneParent(e.parentElement) : false)
 
-    const starContainers = Array.from(
-      document.querySelectorAll("div.starring-container")
-    ).filter((e) => !hasDisplayNoneParent(e))
+      const starContainers = Array.from(
+        document.querySelectorAll("div.starring-container")
+      ).filter((e) => !hasDisplayNoneParent(e))
 
-    let container
-    switch (starContainers.length) {
-      case 0:
-        return
-      case 1:
-        ;[container] = starContainers
-        break
-      default:
-        try {
-          container = await util.createHints(starContainers, { action: null })
-        } catch (_) {
+      let container
+      switch (starContainers.length) {
+        case 0:
           return
-        }
+        case 1:
+          ;[container] = starContainers
+          break
+        default:
+          try {
+            container = await util.createHints(starContainers, { action: null })
+          } catch (_) {
+            return
+          }
+      }
+
+      const repoUrl = container.parentElement.parentElement?.matches(
+        "ul.pagehead-actions"
+      )
+        ? window.location.pathname
+        : new URL(container.parentElement.querySelector("form").action).pathname
+
+      const status = container.classList.contains("on")
+      const repo = repoUrl.slice(1).split("/").slice(0, 2).join("/")
+
+      let star = "★"
+      let statusMsg = "starred"
+      let copula = "is"
+
+      if ((status && toggle) || (!status && !toggle)) {
+        statusMsg = `un${statusMsg}`
+        star = "☆"
+      }
+
+      if (toggle) {
+        copula = "has been"
+        container
+          .querySelector(
+            status
+              ? ".starred button, button.starred"
+              : ".unstarred button, button.unstarred"
+          )
+          .click()
+      }
+
+      Front.showBanner(`${star} Repository ${repo} ${copula} ${statusMsg}!`)
     }
-
-    const repoUrl = container.parentElement.parentElement?.matches(
-      "ul.pagehead-actions"
-    )
-      ? window.location.pathname
-      : new URL(container.parentElement.querySelector("form").action).pathname
-
-    const status = container.classList.contains("on")
-    const repo = repoUrl.slice(1).split("/").slice(0, 2).join("/")
-
-    let star = "★"
-    let statusMsg = "starred"
-    let copula = "is"
-
-    if ((status && toggle) || (!status && !toggle)) {
-      statusMsg = `un${statusMsg}`
-      star = "☆"
-    }
-
-    if (toggle) {
-      copula = "has been"
-      container
-        .querySelector(
-          status
-            ? ".starred button, button.starred"
-            : ".unstarred button, button.unstarred"
-        )
-        .click()
-    }
-
-    Front.showBanner(`${star} Repository ${repo} ${copula} ${statusMsg}!`)
-  }
 
 actions.gh.parseRepo = (url = window.location.href, rootOnly = false) => {
   let u
@@ -463,17 +462,17 @@ actions.gh.parseRepo = (url = window.location.href, rootOnly = false) => {
     !ghReservedNames.check(user)
   return cond
     ? {
-        type: "repo",
-        user,
-        repo,
-        owner: user,
-        name: repo,
-        href: url,
-        url: u,
-        repoBase: `${user}/${repo}`,
-        repoRoot: isRoot,
-        repoPath: rest,
-      }
+      type: "repo",
+      user,
+      repo,
+      owner: user,
+      name: repo,
+      href: url,
+      url: u,
+      repoBase: `${user}/${repo}`,
+      repoRoot: isRoot,
+      repoPath: rest,
+    }
     : null
 }
 
@@ -490,14 +489,14 @@ actions.gh.parseUser = (url = window.location.href, rootOnly = false) => {
     !ghReservedNames.check(user)
   return cond
     ? {
-        type: "user",
-        name: user,
-        user,
-        href: url,
-        url: u,
-        userRoot: isRoot,
-        userPath: rest,
-      }
+      type: "user",
+      name: user,
+      user,
+      href: url,
+      url: u,
+      userRoot: isRoot,
+      userPath: rest,
+    }
     : null
 }
 
@@ -533,9 +532,8 @@ actions.gh.parseFile = (url = window.location.href) => {
   }
   f.rawUrl = f.isDirectory
     ? null
-    : `https://raw.githubusercontent.com/${f.user}/${f.repo}/${
-        f.commitHash
-      }/${f.filePath.join("/")}`
+    : `https://raw.githubusercontent.com/${f.user}/${f.repo}/${f.commitHash
+    }/${f.filePath.join("/")}`
   return f
 }
 
@@ -558,13 +556,13 @@ actions.gh.parseCommit = (url = window.location.href) => {
     !ghReservedNames.check(user)
   return cond
     ? {
-        type: "commit",
-        user,
-        repo,
-        commitHash,
-        href: url,
-        url: u,
-      }
+      type: "commit",
+      user,
+      repo,
+      commitHash,
+      href: url,
+      url: u,
+    }
     : null
 }
 
@@ -585,19 +583,19 @@ actions.gh.parseIssue = (url = window.location.href) => {
     !ghReservedNames.check(user)
   return cond
     ? {
-        href: url,
-        url: u,
-        ...(isRoot
-          ? {
-              type: "issues",
-              issuePath: rest,
-            }
-          : {
-              type: "issue",
-              number: rest[0],
-              issuePath: rest,
-            }),
-      }
+      href: url,
+      url: u,
+      ...(isRoot
+        ? {
+          type: "issues",
+          issuePath: rest,
+        }
+        : {
+          type: "issue",
+          number: rest[0],
+          issuePath: rest,
+        }),
+    }
     : null
 }
 
@@ -618,19 +616,19 @@ actions.gh.parsePull = (url = window.location.href) => {
     !ghReservedNames.check(user)
   return cond
     ? {
-        href: url,
-        url: u,
-        ...(isRoot
-          ? {
-              type: "pulls",
-              pullPath: rest,
-            }
-          : {
-              type: "pull",
-              number: rest[0],
-              pullPath: rest,
-            }),
-      }
+      href: url,
+      url: u,
+      ...(isRoot
+        ? {
+          type: "pulls",
+          pullPath: rest,
+        }
+        : {
+          type: "pull",
+          number: rest[0],
+          pullPath: rest,
+        }),
+    }
     : null
 }
 
@@ -1016,8 +1014,7 @@ actions.nt = {}
 actions.nt.adjustTemp = (dir) =>
   document
     .querySelector(
-      `button[data-test='thermozilla-controller-controls-${
-        dir > 0 ? "in" : "de"
+      `button[data-test='thermozilla-controller-controls-${dir > 0 ? "in" : "de"
       }crement-button']`
     )
     .click()
@@ -1207,9 +1204,8 @@ actions.yt.getCurrentTimestampLink = () =>
 
 actions.yt.getCurrentTimestampMarkdownLink = () =>
   actions.getMarkdownLink({
-    title: `${
-      document.querySelector("#ytd-player .ytp-title").innerText
-    } @ ${actions.yt.getCurrentTimestampHuman()} - YouTube`,
+    title: `${document.querySelector("#ytd-player .ytp-title").innerText
+      } @ ${actions.yt.getCurrentTimestampHuman()} - YouTube`,
     href: actions.yt.getCurrentTimestampLink(),
   })
 

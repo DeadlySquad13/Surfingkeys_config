@@ -65,7 +65,7 @@ util.until = (check, test = (a) => a, maxAttempts = 50, interval = 50) =>
     f()
   })
 
-const localStorageFns = () => {
+/* const localStorageFns = () => {
   if (typeof browser !== "undefined") {
     return [browser.storage.local.get, browser.storage.local.set]
   }
@@ -94,7 +94,7 @@ util.localStorage.set = async (key, val) => {
   const fullkey = util.localStorage.fullkey(key)
   const storageObj = { [fullkey]: val }
   return localStorageSet(storageObj)
-}
+} */
 
 util.htmlUnsafe = (content) => html.node([content])
 
@@ -117,8 +117,8 @@ util.urlItem = (title, url, { desc = null, query = null } = {}) => {
   const descItems =
     desc && desc.length > 0
       ? (Array.isArray(desc) ? desc : [desc]).map(
-          (d) => util.htmlNode`<div>${d}</div>`
-        )
+        (d) => util.htmlNode`<div>${d}</div>`
+      )
       : []
   return util.suggestionItem({ url: url, query: query ?? title })`
     <div>
@@ -195,9 +195,8 @@ util.prettyDate = (date) => {
       Math.round(dayDiff / 365),
       "year",
     ]
-  return `${count ?? ""}${count ? " " : ""}${unit}${
-    (count ?? 0) > 1 ? "s" : ""
-  }${count ? " ago" : ""}`
+  return `${count ?? ""}${count ? " " : ""}${unit}${(count ?? 0) > 1 ? "s" : ""
+    }${count ? " ago" : ""}`
 }
 
 export default util
