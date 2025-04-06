@@ -64,7 +64,7 @@ _Coming soon!_
 #### Dependencies
 
 - **git**
-- **node.js v17**
+- **node.js v17** [see reason](https://github.com/b0o/surfingkeys-conf/issues/91#issue-2928521572)
 
 #### Procedure
 
