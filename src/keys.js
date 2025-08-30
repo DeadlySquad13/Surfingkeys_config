@@ -102,7 +102,7 @@ const unmaps = {
     leader_left + K.prev[0],
   ],
   vmappings: [
-    "h"
+    // "h"
   ],
   searchAliases: {
     s: ["g", "d", "b", "e", "w", "s", "h", "y"],
@@ -147,6 +147,21 @@ maps.global = [
     description: "Go forward in history",
     callback: actions.historyForward,
   },
+  // Search text
+  // - <Tab> is occupied by browser so using "repeat last move" from NeoVim.
+  {
+    // K.next[0] doesn't work because it resolves to yank which we can't unmap.
+    alias: leader_left + "n",
+    map: "n",
+    category: categories.scroll,
+    description: "Scroll to next search result",
+  },
+  {
+    alias: leader_left + K.prev[0],
+    map: "N",
+    category: categories.scroll,
+    description: "Scroll to previous search result",
+  },
   // Tabs.
   /* { default is ok.
     alias: K.left[0],
@@ -161,22 +176,6 @@ maps.global = [
     description: "Go to tab on right",
   },
   // Search.
-  // - <Tab> is occupied by browser so using "repeat last move" from NeoVim.
-  // {
-  //   // alias: leader_left + K.next[0],
-  //   // alias: leader_left + "d",
-  //   // alias: K.prev[0] + "n",
-  //   alias: "h",
-  //   map: "n",
-  //   category: categories.scroll,
-  //   description: "Scroll to next search result",
-  // },
-  // {
-  //   alias: K.next[0] + "n",
-  //   map: "N",
-  //   category: categories.scroll,
-  //   description: "Scroll to previous search result",
-  // },
   {
     alias: K.search[0],
     map: "f",
