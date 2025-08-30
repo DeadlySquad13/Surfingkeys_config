@@ -8,10 +8,66 @@ const { categories } = help
 
 const { Clipboard, Front, Hints } = api
 
+const maps = {}
+const vmaps = {}
+
+// Leaders.
+const leader_left = "r"
+const leader_right = "h"
+
+// Some common semantic keymappings. Trying to be ergonomic and stay as close
+// to my NeoVim setup as possible.
+const K = {
+  insert: ["i", "I"],
+  search: ["s", "S"],
+  yank: ["f", "F"],
+  // yank: ["y", "Y"],
+
+  next: ["y"],
+  prev: ['"'],
+
+  left: ["E"],
+  right: ["N"],
+
+  down: ["d"],
+  up: ["u"],
+
+  downFast: ["n"],
+  upFast: ["e"],
+}
+
+// - yG  Capture current full page
+// - yS  Capture scrolling element
+// - yv  Yank text of an element
+// - ymv Yank text of multiple elements
+// - yma Copy multiple link URLs to the clipboard
+// - ymc Copy multiple columns of a table
+// - yg  Capture current page
+// - ya  Copy a link URL to the clipboard
+// - yc  Copy a column of a table
+// - yq  Copy pre text
+// - yi  Yank text of an input
+// - ys  Copy current page's source
+// - yj  Copy current settings
+// - yy  Copy current page's URL
+// - yY  Copy all tabs's url
+// - yh  Copy current page's host
+// - yl  Copy current page's title
+// - yQ  Copy all query history of OmniQuery.
+// - yf  Copy form data in JSON on current page
+// - yd  Copy current downloading URL
+// - yp  Copy URL path of current page
+// - yI  Copy Image URL
+// - yA  Copy link as Markdown
+// - yO  Copy page URL / Title as Org - mode link
+// - yM  Copy page URL / Title as Markdown link
+
 // Remove undesired default mappings. You don't need
 // to include remapped keybinding here (they won't work).
 const unmaps = {
   mappings: [
+    "L",
+    ":",
     "r",
     "sb",
     "sw",
@@ -42,32 +98,17 @@ const unmaps = {
     "p",
     "<Ctrl-j>",
     "<Ctrl-h>",
+    leader_left + K.next[0],
+    leader_left + K.prev[0],
+  ],
+  vmappings: [
+    "h"
   ],
   searchAliases: {
     s: ["g", "d", "b", "e", "w", "s", "h", "y"],
   },
 }
 
-const maps = {}
-
-// Some "leader" keymappings. Trying to be ergonomic and stay as close
-// to my NeoVim setup as possible.
-const K = {
-  insert: ["i", "I"],
-  search: ["s", "S"],
-  yank: ["y", "Y"], // Hard to remap to "f": need to remap all default keymappings.
-
-  next: ["r"],
-  prev: ["R"],
-
-  left: ["E"],
-  right: ["N"],
-  down: ["d"],
-  up: ["u"],
-
-  downFast: ["n"],
-  upFast: ["e"],
-}
 
 /**
  * @typedef {Mapping}
@@ -83,10 +124,29 @@ const K = {
 
 /**
  * @type {Mapping[]} maps.global
- * Order is important like in vim! Next mapping will take previous remaps into
+ * Order is important like in vim (map vs noremap)! Next mapping will take previous remaps into
  * account.
  */
 maps.global = [
+  {
+    alias: `${leader_left}h`,
+    category: categories.settings,
+    description: "Command mode",
+    callback: () => Front.openOmnibar({ type: "Commands" }),
+  },
+  // History.
+  {
+    alias: "P",
+    category: categories.tabs,
+    description: "Go back in history",
+    callback: actions.historyBack,
+  },
+  {
+    alias: ":",
+    category: categories.tabs,
+    description: "Go forward in history",
+    callback: actions.historyForward,
+  },
   // Tabs.
   /* { default is ok.
     alias: K.left[0],
@@ -101,19 +161,22 @@ maps.global = [
     description: "Go to tab on right",
   },
   // Search.
-  // - <Tab> is occupied by browser so using the nearest key.
-  {
-    alias: K.next[0],
-    map: "n",
-    category: categories.scroll,
-    description: "Scroll to next search result",
-  },
-  {
-    alias: K.prev[0],
-    map: "N",
-    category: categories.scroll,
-    description: "Scroll to previous search result",
-  },
+  // - <Tab> is occupied by browser so using "repeat last move" from NeoVim.
+  // {
+  //   // alias: leader_left + K.next[0],
+  //   // alias: leader_left + "d",
+  //   // alias: K.prev[0] + "n",
+  //   alias: "h",
+  //   map: "n",
+  //   category: categories.scroll,
+  //   description: "Scroll to next search result",
+  // },
+  // {
+  //   alias: K.next[0] + "n",
+  //   map: "N",
+  //   category: categories.scroll,
+  //   description: "Scroll to previous search result",
+  // },
   {
     alias: K.search[0],
     map: "f",
@@ -158,7 +221,6 @@ maps.global = [
     category: categories.scroll,
     description: "Scroll half page up",
   }, */
-
   {
     alias: "gh",
     category: categories.scroll,
@@ -190,12 +252,134 @@ maps.global = [
     },
   },
   // Yank.
-  /* { Didn't help with remapping "y" to "f".
+  {
     alias: K.yank[0],
     map: "y",
     category: categories.clipboard,
-    description: "Copy",
-  }, */
+    description: "Copy selected text",
+  },
+  // - Remapping default.
+  // {
+  //   alias: `${K.yank[0]}S`, // QUESTION: Not sure what to map to. It's not that interesting mapping too.
+  //   category: categories.clipboard,
+  //   description: "Capture scrolling element",
+  //   map: "yS",
+  // },
+  {
+    alias: `${K.yank[0]}mc`,
+    category: categories.clipboard,
+    description: "Copy multiple columns of a table",
+    map: "ymc",
+  },
+  {
+    alias: `${K.yank[0]}ma`,
+    category: categories.clipboard,
+    description: "Copy multiple link URLs to the clipboard",
+    map: "yma",
+  },
+  {
+    alias: `${K.yank[0]}mv`,
+    category: categories.clipboard,
+    description: "Yank text of multiple elements",
+    map: "ymv",
+  },
+  {
+    alias: `${K.yank[0]}v`,
+    category: categories.clipboard,
+    description: "Yank text of an element",
+    map: "yv",
+  },
+  {
+    alias: `${K.yank[0]}g`,
+    category: categories.clipboard,
+    description: "Capture current page",
+    map: "yg",
+  },
+  {
+    alias: `${K.yank[0]}G`,
+    category: categories.clipboard,
+    description: "Capture current full page",
+    map: "yG",
+  },
+  {
+    alias: `${K.yank[0]}${K.search[0]}`,
+    category: categories.clipboard,
+    description: "Copy a link URL to the clipboard",
+    map: "ya",
+  },
+  {
+    alias: `${K.yank[0]}c`,
+    category: categories.clipboard,
+    description: "Copy a column of a table",
+    map: "yc",
+  },
+  {
+    alias: `${K.yank[0]}q`,
+    category: categories.clipboard,
+    description: "Copy pre text",
+    map: "yq",
+  },
+  {
+    alias: `${K.yank[0]}${K.insert[0]}`,
+    category: categories.clipboard,
+    description: "Yank text of an input",
+    map: "yi",
+  },
+  {
+    alias: `${K.yank[0]}S`,
+    category: categories.clipboard,
+    description: "Copy current page's source",
+    map: "ys",
+  },
+  {
+    alias: `${K.yank[0]};`,
+    category: categories.clipboard,
+    description: "Copy current settings",
+    map: "yj",
+  },
+  {
+    alias: `${K.yank[0]}${K.yank[0]}`,
+    category: categories.clipboard,
+    description: "Copy current page's URL",
+    map: "yy",
+  },
+  {
+    alias: `${K.yank[0]}${K.yank[1]}`,
+    category: categories.clipboard,
+    description: "Copy all tabs's url",
+    map: "yY",
+  },
+  {
+    alias: `${K.yank[0]}h`,
+    category: categories.clipboard,
+    description: "Copy current page's host",
+    map: "yh",
+  },
+  {
+    alias: `${K.yank[0]}l`,
+    category: categories.clipboard,
+    description: "Copy current page's title",
+    map: "yl",
+  },
+  {
+    alias: `${K.yank[0]}Q`,
+    category: categories.clipboard,
+    description: "Copy all query history of OmniQuery",
+    map: "yQ",
+  },
+  {
+    alias: `${K.yank[0]}j`,
+    category: categories.clipboard,
+    description: "Copy form data in JSON on current page",
+    map: "yf",
+  },
+  {
+    alias: `${K.yank[0]}d`,
+    category: categories.clipboard,
+    description: "Copy current downloading URL",
+    map: "yd",
+  },
+  // - Custom.
   {
     alias: `${K.yank[0]}p`,
     category: categories.clipboard,
@@ -1389,6 +1573,67 @@ maps["claude.ai"] = [
   },
 ]
 
+/**
+ * @type {Mapping[]} maps.global
+ * Order is important like in vim (map vs noremap)! Next mapping will take previous remaps into
+ * account.
+ */
+vmaps.global = [
+  {
+    alias: "<ArrowRight>",
+    map: "l",
+    category: categories.visualMode,
+    description: "forward character",
+  },
+  {
+    alias: "<ArrowLeft>",
+    map: "h",
+    category: categories.visualMode,
+    description: "backward character",
+  },
+  {
+    alias: "<ArrowDown>",
+    map: "j",
+    category: categories.visualMode,
+    description: "forward line",
+  },
+  {
+    alias: "<ArrowUp>",
+    map: "k",
+    category: categories.visualMode,
+    description: "backward line",
+  },
+  // {
+  //   // alias: leader_left + K.next[0],
+  //   // alias: leader_left + "d",
+  //   // alias: K.prev[0] + "n",
+  //   alias: "r",
+  //   map: "n",
+  //   category: categories.visual,
+  //   description: "Scroll to next search result",
+  // },
+  // {
+  //   alias: K.yank[0],
+  //   map: "y",
+  //   category: categories.visualMode,
+  //   description: "Copy selected text",
+  // },
+  // Search.
+  // - <Tab> is occupied by browser so using "repeat last move" from NeoVim.
+  // {
+  //   alias: leader_left + K.next[0],
+  //   map: "n",
+  //   category: categories.visualMode,
+  //   description: "Scroll to next search result",
+  // },
+  // {
+  //   alias: leader_left + K.prev[0],
+  //   map: "N",
+  //   category: categories.visualMode,
+  //   description: "Scroll to previous search result",
+  // },
+]
+
 const registerDOI = (
   domain,
   provider = actions.doi.providers.meta_citation_doi
@@ -1550,5 +1795,6 @@ const aliases = {
 export default {
   unmaps,
   maps,
+  vmaps,
   aliases,
 }

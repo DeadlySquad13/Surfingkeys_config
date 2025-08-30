@@ -17,6 +17,9 @@ actions.moveTabNextToTab = (targetId, nextTo, leftOf = false) =>
     index: nextTo.index - (leftOf ? 1 : 0),
   })
 
+actions.historyBack = () => history.back();
+actions.historyForward = () => history.forward();
+
 // TODO
 // actions.cutTab = async () =>
 //   browser.storage.local.set({
