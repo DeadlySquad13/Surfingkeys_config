@@ -1578,29 +1578,64 @@ maps["claude.ai"] = [
  * account.
  */
 vmaps.global = [
+  // Movement.
+  // - Basic.
   {
     alias: "<ArrowRight>",
     map: "l",
     category: categories.visualMode,
-    description: "forward character",
+    description: "Forward character",
   },
   {
     alias: "<ArrowLeft>",
     map: "h",
     category: categories.visualMode,
-    description: "backward character",
+    description: "Backward character",
   },
   {
     alias: "<ArrowDown>",
     map: "j",
     category: categories.visualMode,
-    description: "forward line",
+    description: "Forward line",
   },
   {
     alias: "<ArrowUp>",
     map: "k",
     category: categories.visualMode,
-    description: "backward line",
+    description: "Backward line",
+  },
+  // * Text objects.
+  // - Words.
+  {
+    alias: "a",
+    map: "w",
+    category: categories.visualMode,
+    description: "Forward word",
+  },
+  {
+    alias: "c",
+    map: "b",
+    category: categories.visualMode,
+    description: "Backward word",
+  },
+  {
+    alias: "d",
+    map: "e",
+    category: categories.visualMode,
+    description: "Forward to end word",
+  },
+  // * Jump to char.
+  {
+    alias: "w",
+    map: "f",
+    category: categories.visualMode,
+    description: "Forward to next char",
+  },
+  {
+    alias: "W",
+    map: "F",
+    category: categories.visualMode,
+    description: "Backward to next char",
   },
   // {
   //   // alias: leader_left + K.next[0],
